@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>City Mapper</title>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<div id="searchPlace">
+    <input type="text" id="placeInput" placeholder="Enter a place to search..."/>
+</div>
+
+<div>
+    <label for="transportMode">Choose Transport Mode:</label>
+    <select id="transportMode" onchange="toggleDrivingOptions()">
+        <option value="walking">Walking</option>
+        <option value="driving">Driving</option>
+        <option value="cycling">Cycling</option>
+        <option value="tramway">Tramway</option>
+    </select>
+</div>
+
+<div id="drivingOptions">
+    <label for="drivingSubMode">Choose Sub-Mode:</label>
+    <select id="drivingSubMode">
+        <option value="mycar">My Car</option>
+        <option value="taxi">Taxi</option>
+    </select>
+</div>
+
+<div id="map_div"></div>
+<button onclick="calculateRoute()">Calculate Route</button>
+<button onclick="shareLocation()">Share Location</button>
+
+<div id="pricing"></div>
+
+<div id="stepInstructions"></div>
+
+<script th:src="@{/js/script.js}"></script>
+
+</body>
+</html>

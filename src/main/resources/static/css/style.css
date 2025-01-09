@@ -1,0 +1,71 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#map_div {
+    width: 800px;
+    height: 600px;
+}
+
+#searchPlace {
+    margin-top: 10px;
+    position: relative;
+}
+
+#placeInput {
+    width: 300px;
+    padding: 5px;
+}
+
+#suggestions {
+    position: absolute;
+    z-index: 10;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 300px;
+}
+
+.suggestion-item {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.directions-route {
+    line-color: #3887be;
+    line-width: 5;
+}
+
+#pricing {
+    margin-top: 20px;
+}
+
+#drivingOptions {
+    display: none;
+    margin-top: 10px;
+}
+
+#routeInstructionsDropdown {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: white;
+}
+
+#routeInstructionsDropdown ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#routeInstructionsDropdown li {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+
