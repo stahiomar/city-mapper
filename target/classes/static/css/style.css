@@ -68,4 +68,30 @@ body {
     border-bottom: 1px solid #ccc;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+}
 
+.header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.header .logout-btn {
+    background-color: #ff4b5c;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header .logout-btn:hover {
+    background-color: #ff2e3a;
+}

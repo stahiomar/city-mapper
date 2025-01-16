@@ -9,8 +9,15 @@
 </head>
 
 <body>
+<!-- Header with Logo and Logout -->
+<div class="header">
+    <div class="logo">City Mapper</div>
+    <a href="/logout" th:href="@{/logout}" class="logout-btn">Logout</a>
+</div>
+
 <div id="searchPlace">
     <input type="text" id="placeInput" placeholder="Enter a place to search..."/>
+    <button onclick="setDestinationFromInput()">Set Destination from Input</button>
 </div>
 
 <div>
@@ -40,6 +47,5 @@
 <div id="stepInstructions"></div>
 
 <script th:src="@{/js/script.js}"></script>
-
 </body>
 </html>

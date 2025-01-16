@@ -3,6 +3,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiLS1vbWFyLS0iLCJhIjoiY201a3Q2aWlzMTl6bTJ2czZwc
 let map;
 let currentPositionCoordinates = null;
 let destinationCoordinates = null;
+
 let tramwayStops = [// Rabat Line
     {name: "Hay Karima", coordinates: [-6.800798, 34.065678]}, {
         name: "Yacoub Al Mansour",
@@ -82,6 +83,7 @@ function initializeMap() {
     });
 }
 
+
 function calculateRoute() {
     if (!currentPositionCoordinates || !destinationCoordinates) {
         alert("Please set both current position and destination.");
@@ -136,6 +138,48 @@ function calculateRoute() {
         });
 }
 
+function setDestinationFromInput() {
+    const placeInput = document.getElementById("placeInput").value;
+    if (!placeInput) {
+        alert("Please enter a place to search.");
+        return;
+    }
+
+    // Geocoding API request URL
+    const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(placeInput)}.json?access_token=${mapboxgl.accessToken}`;
+
+    fetch(geocodeUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features && data.features.length > 0) {
+                // Get the coordinates of the first result
+                const coordinates = data.features[0].center;
+
+                // Update the destination coordinates
+                destinationCoordinates = coordinates;
+
+                // Remove the existing destination marker if any
+                const existingMarker = document.querySelector('.destination-marker');
+                if (existingMarker) {
+                    existingMarker.remove();
+                }
+
+                // Add a new marker for the destination
+                new mapboxgl.Marker({color: 'red', className: 'destination-marker'})
+                    .setLngLat(destinationCoordinates)
+                    .setPopup(new mapboxgl.Popup().setText("Destination"))
+                    .addTo(map);
+
+                // Calculate the route with the new destination
+                calculateRoute();
+            } else {
+                alert("No location found. Please try again.");
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching location data:", error);
+        });
+}
 
 function calculateTramwayRoute() {
     const nearestInitialStop = findNearestTramwayStop(currentPositionCoordinates);
