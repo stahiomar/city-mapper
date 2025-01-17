@@ -1,84 +1,25 @@
+/* Reset CSS */
 body {
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
-#map_div {
-    width: 800px;
-    height: 600px;
-}
-
-#searchPlace {
-    margin-top: 10px;
-    position: relative;
-}
-
-#placeInput {
-    width: 300px;
-    padding: 5px;
-}
-
-#suggestions {
-    position: absolute;
-    z-index: 10;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 150px;
-    overflow-y: auto;
-    width: 300px;
-}
-
-.suggestion-item {
-    padding: 5px;
-    cursor: pointer;
-}
-
-.suggestion-item:hover {
-    background-color: #f0f0f0;
-}
-
-.directions-route {
-    line-color: #3887be;
-    line-width: 5;
-}
-
-#pricing {
-    margin-top: 20px;
-}
-
-#drivingOptions {
-    display: none;
-    margin-top: 10px;
-}
-
-#routeInstructionsDropdown {
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: white;
-}
-
-#routeInstructionsDropdown ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-#routeInstructionsDropdown li {
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
-}
-
+/* Header Section */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
+    background-color: #0056b3;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .header .logo {
-    font-size: 1.5em;
+    font-size: 1.8em;
     font-weight: bold;
 }
 
@@ -86,12 +27,179 @@ body {
     background-color: #ff4b5c;
     border: none;
     color: white;
-    padding: 10px 15px;
+    padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .header .logout-btn:hover {
     background-color: #ff2e3a;
+}
+
+/* Map Section */
+#map_div {
+    width: 100%;
+    height: 500px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Search and Transport Options */
+#searchPlace {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+}
+
+#placeInput {
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#searchPlace button {
+    padding: 10px 15px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+#searchPlace button:hover {
+    background-color: #0040a1;
+}
+
+#transportMode, #drivingSubMode {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#drivingOptions {
+    display: none;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Pricing and Instructions */
+#pricing {
+    margin: 20px auto;
+    text-align: center;
+    font-size: 1.2em;
+    color: #0056b3;
+    font-weight: bold;
+}
+
+#stepInstructions {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#stepInstructions h3 {
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+
+#stepInstructions ul {
+    list-style: none;
+    padding: 0;
+}
+
+#stepInstructions li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+#stepInstructions li:last-child {
+    border-bottom: none;
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0040a1;
+}
+
+/* Suggestions Dropdown */
+#suggestions {
+    position: absolute;
+    z-index: 10;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 400px;
+    margin-top: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Marker Styles */
+.mapboxgl-popup-content {
+    font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.mapboxgl-marker {
+    transform: translate(-50%, -50%);
+}
+
+.mapboxgl-popup-anchor-top .mapboxgl-popup-content {
+    margin-bottom: 15px;
+}
+
+/* General Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
 }
