@@ -57,6 +57,33 @@ let destinationCoordinates = null;
 
 let tramwayStops = [
     // Rabat Line
+    {name: "Hay Karima", coordinates: [-6.798, 34.046]},
+    {name: "Yacoub Al Mansour", coordinates: [-6.857, 34.020]},
+    {name: "Avenue Med V", coordinates: [-6.832, 34.022]},
+    {name: "Cité Universitaire", coordinates: [-6.870, 34.017]},
+    {name: "Place Nations Unies", coordinates: [-6.832, 34.022]},
+    {name: "Gare Rabat Ville", coordinates: [-6.836, 34.020]},
+    {name: "Medina", coordinates: [-6.840, 34.022]},
+    {name: "Hassan", coordinates: [-6.841, 34.025]},
+    {name: "Bab Chellah", coordinates: [-6.846, 34.023]},
+    {name: "Avenue Mohamed V", coordinates: [-6.851, 34.021]},
+    {name: "Rabat Agdal", coordinates: [-6.857, 34.017]},
+    {name: "Gare Agdal", coordinates: [-6.864, 34.015]},
+
+    // Salé Line
+    {name: "Sidi Moussa", coordinates: [-6.801, 34.061]},
+    {name: "Bab Lamrissa", coordinates: [-6.802, 34.057]},
+    {name: "Gare Salé Ville", coordinates: [-6.809, 34.055]},
+    {name: "Marina", coordinates: [-6.816, 34.054]},
+    {name: "Hay Salam", coordinates: [-6.812, 34.050]},
+    {name: "Gare Bouknadel", coordinates: [-6.794, 34.046]},
+    {name: "Al Qods", coordinates: [-6.790, 34.045]},
+    {name: "Avenue Hassan II", coordinates: [-6.786, 34.043]},
+    {name: "Zerktouni", coordinates: [-6.780, 34.040]},
+    {name: "Hay Riyad", coordinates: [-6.774, 34.038]},
+    {name: "Tabriquet", coordinates: [-6.770, 34.035]},
+    {name: "Aviation", coordinates: [-6.765, 34.032]},
+    {name: "Salé Al Jadida", coordinates: [-6.760, 34.029]},
     {name: "Hassan ||", coordinates: [-6.799659759188666, 34.035505006097566]}
 ];
 
