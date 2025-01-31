@@ -314,4 +314,7 @@ window.onload = () => {
             .addTo(map);
     }
 };
-window.onload = initializeMap;
+window.onload = function() {
+    initializeMap();
+    toggleDrivingOptions(); // Ensure driving options are hidden by default
+};

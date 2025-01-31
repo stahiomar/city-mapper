@@ -1,205 +1,181 @@
-/* Reset CSS */
-body {
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #10b981;
+    --background-light: #f0f9ff;
+    --text-dark: #1f2937;
+    --border-radius: 12px;
+    --shadow-subtle: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-medium: 0 10px 15px rgba(0,0,0,0.15);
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    transition: all 0.3s ease;
 }
 
-/* Header Section */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #0056b3;
-    color: white;
-    padding: 15px 30px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    line-height: 1.6;
 }
 
-.header .logo {
-    font-size: 1.8em;
-    font-weight: bold;
-}
-
-.header .logout-btn {
-    background-color: #ff4b5c;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.header .logout-btn:hover {
-    background-color: #ff2e3a;
-}
-
-/* Map Section */
-#map_div {
-    width: 100%;
-    height: 500px;
-    margin: 20px auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* Search and Transport Options */
-#searchPlace {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin: 20px auto;
-}
-
-#placeInput {
-    width: 400px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#searchPlace button {
-    padding: 10px 15px;
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s;
-}
-
-#searchPlace button:hover {
-    background-color: #0040a1;
-}
-
-#transportMode, #drivingSubMode {
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#drivingOptions {
-    display: none;
-    margin-top: 15px;
-    text-align: center;
-}
-
-/* Pricing and Instructions */
-#pricing {
-    margin: 20px auto;
-    text-align: center;
-    font-size: 1.2em;
-    color: #0056b3;
-    font-weight: bold;
-}
-
-#stepInstructions {
-    margin: 20px auto;
-    width: 90%;
-    max-width: 800px;
-    padding: 15px;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-#stepInstructions h3 {
-    margin-bottom: 10px;
-    color: #0056b3;
-}
-
-#stepInstructions ul {
-    list-style: none;
-    padding: 0;
-}
-
-#stepInstructions li {
-    padding: 8px 0;
-    border-bottom: 1px solid #f4f4f4;
-}
-
-#stepInstructions li:last-child {
-    border-bottom: none;
-}
-
-/* Buttons */
-button {
-    padding: 10px 20px;
-    margin: 10px 5px;
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #0040a1;
-}
-
-/* Suggestions Dropdown */
-#suggestions {
-    position: absolute;
-    z-index: 10;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 150px;
-    overflow-y: auto;
-    width: 400px;
-    margin-top: 5px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.suggestion-item {
-    padding: 10px;
-    cursor: pointer;
-    font-size: 0.9em;
-}
-
-.suggestion-item:hover {
-    background-color: #f0f0f0;
-}
-
-/* Marker Styles */
-.mapboxgl-popup-content {
-    font-size: 0.9em;
-    border-radius: 5px;
-}
-
-.mapboxgl-marker {
-    transform: translate(-50%, -50%);
-}
-
-.mapboxgl-popup-anchor-top .mapboxgl-popup-content {
-    margin-bottom: 15px;
-}
-
-/* General Styles */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
-.text-center {
-    text-align: center;
+/* Elegant Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary-color), #4f46e5);
+    color: white;
+    padding: 15px 30px;
+    box-shadow: var(--shadow-medium);
 }
 
-.hidden {
-    display: none;
+.header .logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logout-btn {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid white;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+/* Modern Input Styling */
+#searchPlace {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto;
+}
+
+#placeInput {
+    width: 400px;
+    padding: 12px 15px;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    box-shadow: var(--shadow-subtle);
+}
+
+#placeInput:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Enhanced Buttons */
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 12px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--shadow-subtle);
+}
+
+button:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* Map Styling */
+#map_div {
+    width: 100%;
+    height: 500px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    border: 3px solid var(--primary-color);
+}
+
+/* Transport Mode Selector */
+#transportMode, #drivingSubMode {
+    appearance: none;
+    background-color: white;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 10px 15px;
+    font-size: 1em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 4l5 5 5-5z' fill='%232563eb'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    box-shadow: var(--shadow-subtle);
+}
+
+/* Results and Instructions Panel */
+#pricing, #stepInstructions {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: var(--shadow-medium);
+}
+
+#stepInstructions h3 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+#stepInstructions ul {
+    list-style-type: none;
+}
+
+#stepInstructions li {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+}
+
+#stepInstructions li:before {
+    content: '➜';
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #searchPlace {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #placeInput {
+        width: 100%;
+    }
+}
+
+/* Subtle Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#stepInstructions, #pricing {
+    animation: fadeIn 0.5s ease;
 }
