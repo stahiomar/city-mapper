@@ -3,45 +3,89 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiLS1vbWFyLS0iLCJhIjoiY201a3Q2aWlzMTl6bTJ2czZwc
 let map;
 let currentPositionCoordinates = null;
 let destinationCoordinates = null;
+/*
+******l1******
+* hay karima
+* tabriquet
+* la poste
+* mohammed V - Opera
+* diar
+* gare de salé
+** bab lamrissa
+** pont hassan ||
+** place du 16 novembre
+** tour hassan
+** place al joulane
+* mohammed V gare de rabat-ville
+* bab rouah
+* bibliotheque nationale
+* ibn khaldoun
+* nations unies
+* agdal avenue de france
+* ibn sina
+* ibn rochd
+* cité universitaire souissi
+* madinat al irfane
 
-let tramwayStops = [// Rabat Line
-    {name: "Hay Karima", coordinates: [-6.800798, 34.065678]}, {
-        name: "Yacoub Al Mansour",
-        coordinates: [-6.805784, 34.060896]
-    }, {name: "Avenue Med V", coordinates: [-6.810325, 34.057225]}, {
-        name: "Cité Universitaire",
-        coordinates: [-6.812936, 34.054112]
-    }, {name: "Place Nations Unies", coordinates: [-6.818456, 34.049842]}, {
-        name: "Gare Rabat Ville",
-        coordinates: [-6.827625, 34.030854]
-    }, {name: "Medina", coordinates: [-6.834256, 34.026789]}, {
-        name: "Hassan",
-        coordinates: [-6.840057, 34.025500]
-    }, {name: "Bab Chellah", coordinates: [-6.845321, 34.023472]}, {
-        name: "Avenue Mohamed V",
-        coordinates: [-6.851674, 34.021789]
-    }, {name: "Rabat Agdal", coordinates: [-6.857123, 34.017456]}, {
-        name: "Gare Agdal",
-        coordinates: [-6.864217, 34.015891]
-    },
+******l2******
+* hopital moulay youssef
+* sidi mohamed ben abdellah 34.01625811674855, -6.854665316973613
+* place de russie
+* bab el had
+* medina
+* bab chellah
+** place al joulane
+** tour hassan
+** place du 16 novembre 34.02473203749335, -6.825320618825434
+** pont hassan ||
+** bab lamrissa
+* arrazi
+* bettana
+* hassan || 34.035505006097566, -6.799659759188666
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+let tramwayStops = [
+    // Rabat Line
+    {name: "Hay Karima", coordinates: [-6.798, 34.046]},
+    {name: "Yacoub Al Mansour", coordinates: [-6.857, 34.020]},
+    {name: "Avenue Med V", coordinates: [-6.832, 34.022]},
+    {name: "Cité Universitaire", coordinates: [-6.870, 34.017]},
+    {name: "Place Nations Unies", coordinates: [-6.832, 34.022]},
+    {name: "Gare Rabat Ville", coordinates: [-6.836, 34.020]},
+    {name: "Medina", coordinates: [-6.840, 34.022]},
+    {name: "Hassan", coordinates: [-6.841, 34.025]},
+    {name: "Bab Chellah", coordinates: [-6.846, 34.023]},
+    {name: "Avenue Mohamed V", coordinates: [-6.851, 34.021]},
+    {name: "Rabat Agdal", coordinates: [-6.857, 34.017]},
+    {name: "Gare Agdal", coordinates: [-6.864, 34.015]},
 
     // Salé Line
-    {name: "Sidi Moussa", coordinates: [-6.801921, 34.061247]}, {
-        name: "Bab Lamrissa",
-        coordinates: [-6.802821, 34.057032]
-    }, {name: "Gare Salé Ville", coordinates: [-6.809721, 34.055162]}, {
-        name: "Marina",
-        coordinates: [-6.816178, 34.054011]
-    }, {name: "Hay Salam", coordinates: [-6.812178, 34.050211]}, {
-        name: "Gare Bouknadel",
-        coordinates: [-6.794718, 34.046789]
-    }, {name: "Al Qods", coordinates: [-6.790256, 34.045567]}, {
-        name: "Avenue Hassan II",
-        coordinates: [-6.786045, 34.043281]
-    }, {name: "Zerktouni", coordinates: [-6.780178, 34.040789]}, {
-        name: "Hay Riyad",
-        coordinates: [-6.774512, 34.038212]
-    }];
+    {name: "Sidi Moussa", coordinates: [-6.801, 34.061]},
+    {name: "Bab Lamrissa", coordinates: [-6.802, 34.057]},
+    {name: "Gare Salé Ville", coordinates: [-6.809, 34.055]},
+    {name: "Marina", coordinates: [-6.816, 34.054]},
+    {name: "Hay Salam", coordinates: [-6.812, 34.050]},
+    {name: "Gare Bouknadel", coordinates: [-6.794, 34.046]},
+    {name: "Al Qods", coordinates: [-6.790, 34.045]},
+    {name: "Avenue Hassan II", coordinates: [-6.786, 34.043]},
+    {name: "Zerktouni", coordinates: [-6.780, 34.040]},
+    {name: "Hay Riyad", coordinates: [-6.774, 34.038]},
+    {name: "Tabriquet", coordinates: [-6.770, 34.035]},
+    {name: "Aviation", coordinates: [-6.765, 34.032]},
+    {name: "Salé Al Jadida", coordinates: [-6.760, 34.029]},
+    {name: "Hassan ||", coordinates: [-6.799659759188666, 34.035505006097566]}
+];
 
 
 function initializeMap() {
