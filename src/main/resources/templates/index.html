@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>City Mapper</title>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
@@ -12,40 +11,50 @@
 <!-- Header with Logo and Logout -->
 <div class="header">
     <div class="logo">City Mapper</div>
-    <a href="/logout" th:href="@{/logout}" class="logout-btn">Logout</a>
+    <a href="/logout" th:href="@{/logout}" class="logout-btn">
+        Logout
+    </a>
 </div>
 
-<div id="searchPlace">
+<!-- Search Container -->
+<div id="searchPlace" class="animate-in">
     <input type="text" id="placeInput" placeholder="Enter a place to search..."/>
-    <button onclick="setDestinationFromInput()">Set Destination from Input</button>
+    <button onclick="setDestinationFromInput()">Set Destination</button>
 </div>
 
-<div>
-    <label for="transportMode">Choose Transport Mode:</label>
-    <select id="transportMode" onchange="toggleDrivingOptions()">
-        <option value="walking">Walking</option>
-        <option value="driving">Driving</option>
-        <option value="cycling">Cycling</option>
-        <option value="tramway">Tramway</option>
-    </select>
+<!-- Transport Controls -->
+<div class="transport-controls animate-in">
+    <div class="select-group">
+        <label for="transportMode">Transport Mode</label>
+        <select id="transportMode" onchange="toggleDrivingOptions()">
+            <option value="walking">Walking</option>
+            <option value="driving">Driving</option>
+            <option value="cycling">Cycling</option>
+            <option value="tramway">Tramway</option>
+        </select>
+    </div>
+
+    <div class="select-group" id="drivingOptions">
+        <label for="drivingSubMode">Vehicle Type</label>
+        <select id="drivingSubMode">
+            <option value="mycar">My Car</option>
+            <option value="taxi">Taxi</option>
+        </select>
+    </div>
 </div>
 
-<div id="drivingOptions">
-    <label for="drivingSubMode">Choose Sub-Mode:</label>
-    <select id="drivingSubMode">
-        <option value="mycar">My Car</option>
-        <option value="taxi">Taxi</option>
-    </select>
-</div>
+<!-- Map Container -->
+<div id="map_div" class="animate-in"></div>
 
-<div id="map_div"></div>
-<div class="action-buttons">
+<!-- Action Buttons -->
+<div class="action-buttons animate-in">
     <button onclick="calculateRoute()">Calculate Route</button>
     <button onclick="shareLocation()">Share Location</button>
 </div>
-<div id="pricing"></div>
 
-<div id="stepInstructions"></div>
+<!-- Results Sections -->
+<div id="pricing" class="animate-in"></div>
+<div id="stepInstructions" class="animate-in"></div>
 
 <script th:src="@{/js/script.js}"></script>
 </body>
