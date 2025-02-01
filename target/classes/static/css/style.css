@@ -418,3 +418,128 @@ button:active {
     outline: none;
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5);
 }
+
+.search-history {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: 1.5rem auto;
+    max-width: 850px;
+}
+
+.search-history h3 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--primary);
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background: #f8fafc;
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.history-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.history-actions button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.search-history {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: 1.5rem auto;
+    max-width: 850px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.history-header h3 {
+    color: var(--primary);
+    margin: 0;
+}
+
+.collapse-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    box-shadow: none;
+}
+
+.collapse-btn:hover {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.collapse-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.collapse-icon.collapsed {
+    transform: rotate(-90deg);
+}
+
+.history-list {
+    max-height: 500px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease-out;
+}
+
+.history-list.collapsed {
+    max-height: 0;
+    overflow: hidden;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background: #f8fafc;
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.history-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.history-actions button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}

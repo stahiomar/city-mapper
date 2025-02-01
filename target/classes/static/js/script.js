@@ -3,6 +3,26 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiLS1vbWFyLS0iLCJhIjoiY201a3Q2aWlzMTl6bTJ2czZwc
 let map;
 let currentPositionCoordinates = null;
 let destinationCoordinates = null;
+let searchHistory = [];
+const MAX_HISTORY_ITEMS = 10;
+// Add this to your existing JavaScript
+let isHistoryCollapsed = true; // Start collapsed
+
+function toggleHistory() {
+    const historyList = document.getElementById('historyList');
+    const collapseIcon = document.querySelector('.collapse-icon');
+    isHistoryCollapsed = !isHistoryCollapsed;
+
+    if (isHistoryCollapsed) {
+        historyList.classList.add('collapsed');
+        collapseIcon.classList.add('collapsed');
+    } else {
+        historyList.classList.remove('collapsed');
+        collapseIcon.classList.remove('collapsed');
+    }
+}
+
+
 /*
 ******l1******
 * hay karima
@@ -47,7 +67,79 @@ let destinationCoordinates = null;
 
 */
 
+// Add this function to handle saving to history
+function saveToHistory(place, coordinates) {
+    const historyItem = {
+        place: place,
+        coordinates: coordinates,
+        timestamp: new Date().toLocaleString()
+    };
 
+    // Add to beginning of array
+    searchHistory.unshift(historyItem);
+
+    // Keep only the last MAX_HISTORY_ITEMS items
+    if (searchHistory.length > MAX_HISTORY_ITEMS) {
+        searchHistory = searchHistory.slice(0, MAX_HISTORY_ITEMS);
+    }
+
+    // Save to localStorage
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+    // Update display
+    displayHistory();
+}
+
+// Add this function to display history
+function displayHistory() {
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML = '';
+
+    searchHistory.forEach((item, index) => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.innerHTML = `
+            <div>
+                <strong>${item.place}</strong>
+                <br>
+                <small>${item.timestamp}</small>
+            </div>
+            <div class="history-actions">
+                <button onclick="useHistoryItem(${index})">Use</button>
+                <button onclick="deleteHistoryItem(${index})">Delete</button>
+            </div>
+        `;
+        historyList.appendChild(historyItem);
+    });
+}
+
+// Add this function to use a history item
+function useHistoryItem(index) {
+    const item = searchHistory[index];
+    document.getElementById('placeInput').value = item.place;
+    destinationCoordinates = item.coordinates;
+
+    // Remove existing marker if any
+    const existingMarker = document.querySelector('.destination-marker');
+    if (existingMarker) {
+        existingMarker.remove();
+    }
+
+    // Add marker for the destination
+    new mapboxgl.Marker({color: 'red', className: 'destination-marker'})
+        .setLngLat(item.coordinates)
+        .setPopup(new mapboxgl.Popup().setText("Destination"))
+        .addTo(map);
+
+    calculateRoute();
+}
+
+// Add this function to delete a history item
+function deleteHistoryItem(index) {
+    searchHistory.splice(index, 1);
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    displayHistory();
+}
 
 
 
@@ -201,7 +293,8 @@ function setDestinationFromInput() {
 
                 // Update the destination coordinates
                 destinationCoordinates = coordinates;
-
+// Save to history
+                saveToHistory(placeInput, coordinates);
                 // Remove the existing destination marker if any
                 const existingMarker = document.querySelector('.destination-marker');
                 if (existingMarker) {
@@ -358,7 +451,23 @@ window.onload = () => {
             .addTo(map);
     }
 };
+// Add this to your window.onload function to load history from localStorage
 window.onload = function() {
     initializeMap();
-    toggleDrivingOptions(); // Ensure driving options are hidden by default
+    toggleDrivingOptions();
+
+    // Load history from localStorage
+    const savedHistory = localStorage.getItem('searchHistory');
+    if (savedHistory) {
+        searchHistory = JSON.parse(savedHistory);
+        displayHistory();
+    }
+
+    // Set initial collapse state
+    const historyList = document.getElementById('historyList');
+    const collapseIcon = document.querySelector('.collapse-icon');
+    if (isHistoryCollapsed) {
+        historyList.classList.add('collapsed');
+        collapseIcon.classList.add('collapsed');
+    }
 };
