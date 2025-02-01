@@ -202,7 +202,7 @@ function initializeMap() {
             .addTo(map);
     });
 
-    map.on('click', function (e) {
+    map.on('click', function(e) {
         destinationCoordinates = e.lngLat.toArray();
 
         const existingMarker = document.querySelector('.destination-marker');
@@ -215,7 +215,12 @@ function initializeMap() {
             .setPopup(new mapboxgl.Popup().setText("Destination"))
             .addTo(map);
 
-        calculateRoute();
+        // Get place name and save to history
+        getPlaceNameFromCoordinates(destinationCoordinates)
+            .then(placeName => {
+                saveToHistory(placeName, destinationCoordinates);
+                calculateRoute();
+            });
     });
 }
 
@@ -418,6 +423,26 @@ function toggleDrivingOptions() {
     const drivingOptions = document.getElementById("drivingOptions");
     drivingOptions.style.display = transportMode === "driving" ? "block" : "none";
 }
+
+// Add this function to get place name from coordinates
+function getPlaceNameFromCoordinates(coordinates) {
+    const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates[0]},${coordinates[1]}.json?access_token=${mapboxgl.accessToken}`;
+
+    return fetch(geocodeUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features && data.features.length > 0) {
+                // Return the most relevant place name
+                return data.features[0].place_name;
+            }
+            return "Unknown location";
+        })
+        .catch(error => {
+            console.error("Error fetching place name:", error);
+            return "Unknown location";
+        });
+}
+
 
 function shareLocation() {
     // Use either the map center or destination coordinates
