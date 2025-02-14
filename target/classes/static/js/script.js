@@ -5,8 +5,173 @@ let currentPositionCoordinates = null;
 let destinationCoordinates = null;
 let searchHistory = [];
 const MAX_HISTORY_ITEMS = 10;
+const mapboxGeocoder = `
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
+`;
 // Add this to your existing JavaScript
 let isHistoryCollapsed = true; // Start collapsed
+
+// Create a debounce function to limit API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Create the autocomplete functionality
+function initializeAutocomplete() {
+    const searchInput = document.getElementById('placeInput');
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.className = 'suggestions-container';
+    searchInput.parentNode.insertBefore(suggestionsContainer, searchInput.nextSibling);
+
+    // Style the suggestions container
+    suggestionsContainer.style.cssText = `
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 1000;
+        margin-top: 4px;
+        display: none;
+    `;
+
+    // Function to fetch suggestions from Mapbox
+    const fetchSuggestions = debounce((query) => {
+        if (!query) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+
+        const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxgl.accessToken}&limit=5`;
+
+        fetch(geocodingUrl)
+            .then(response => response.json())
+            .then(data => {
+                suggestionsContainer.innerHTML = '';
+
+                if (data.features && data.features.length > 0) {
+                    data.features.forEach(feature => {
+                        const suggestion = document.createElement('div');
+                        suggestion.className = 'suggestion-item';
+                        suggestion.innerHTML = `
+                            <div class="place-name">${feature.place_name}</div>
+                            <div class="place-type">${feature.place_type[0]}</div>
+                        `;
+
+                        // Style the suggestion item
+                        suggestion.style.cssText = `
+                            padding: 10px 15px;
+                            cursor: pointer;
+                            transition: background-color 0.2s;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            border-bottom: 1px solid #eee;
+                        `;
+
+                        suggestion.addEventListener('mouseover', () => {
+                            suggestion.style.backgroundColor = '#f8fafc';
+                        });
+
+                        suggestion.addEventListener('mouseout', () => {
+                            suggestion.style.backgroundColor = 'white';
+                        });
+
+                        suggestion.addEventListener('click', () => {
+                            searchInput.value = feature.place_name;
+                            destinationCoordinates = feature.center;
+                            suggestionsContainer.style.display = 'none';
+
+                            // Remove existing marker if any
+                            const existingMarker = document.querySelector('.destination-marker');
+                            if (existingMarker) {
+                                existingMarker.remove();
+                            }
+
+                            // Add new marker
+                            new mapboxgl.Marker({color: 'red', className: 'destination-marker'})
+                                .setLngLat(feature.center)
+                                .setPopup(new mapboxgl.Popup().setText("Destination"))
+                                .addTo(map);
+
+                            // Save to history
+                            saveToHistory(feature.place_name, feature.center);
+
+                            // Calculate route
+                            calculateRoute();
+                        });
+
+                        suggestionsContainer.appendChild(suggestion);
+                    });
+
+                    suggestionsContainer.style.display = 'block';
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching suggestions:', error);
+                suggestionsContainer.style.display = 'none';
+            });
+    }, 300);
+
+    // Add input event listener
+    searchInput.addEventListener('input', (e) => {
+        fetchSuggestions(e.target.value);
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+
+    // Add keyboard navigation
+    searchInput.addEventListener('keydown', (e) => {
+        const suggestions = suggestionsContainer.getElementsByClassName('suggestion-item');
+        let currentFocus = -1;
+
+        // Arrow key navigation
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+
+            if (e.key === 'ArrowDown') {
+                currentFocus = Math.min(currentFocus + 1, suggestions.length - 1);
+            } else {
+                currentFocus = Math.max(currentFocus - 1, 0);
+            }
+
+            // Update visual focus
+            Array.from(suggestions).forEach((item, index) => {
+                if (index === currentFocus) {
+                    item.style.backgroundColor = '#f8fafc';
+                } else {
+                    item.style.backgroundColor = 'white';
+                }
+            });
+        }
+
+        // Enter key selection
+        if (e.key === 'Enter' && currentFocus > -1) {
+            if (suggestions[currentFocus]) {
+                suggestions[currentFocus].click();
+            }
+        }
+    });
+}
 
 function toggleHistory() {
     const historyList = document.getElementById('historyList');
@@ -480,6 +645,7 @@ window.onload = () => {
 window.onload = function() {
     initializeMap();
     toggleDrivingOptions();
+    initializeAutocomplete();
 
     // Load history from localStorage
     const savedHistory = localStorage.getItem('searchHistory');
