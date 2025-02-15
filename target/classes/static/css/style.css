@@ -543,3 +543,48 @@ button:active {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
 }
+
+#map-legend {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+#map-legend h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.legend-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.legend-marker.blue {
+    background-color: blue;
+}
+
+.legend-marker.red {
+    background-color: red;
+}
+
+.legend-marker.green {
+    background-color: green;
+}
+
+.tramway-legend {
+    display: none;
+}

@@ -4,6 +4,7 @@ let map;
 let currentPositionCoordinates = null;
 let destinationCoordinates = null;
 let searchHistory = [];
+let tramwayMarkers = [];
 const MAX_HISTORY_ITEMS = 10;
 const mapboxGeocoder = `
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
@@ -336,12 +337,12 @@ function initializeMap() {
         .setPopup(new mapboxgl.Popup().setText("Your Current Location"))
         .addTo(map);
 
-    // Add tramway stops
+    // Create tramway markers but don't add them to map yet
     tramwayStops.forEach(stop => {
-        new mapboxgl.Marker({color: 'green'})
+        const marker = new mapboxgl.Marker({color: 'green'})
             .setLngLat(stop.coordinates)
-            .setPopup(new mapboxgl.Popup().setText(stop.name))
-            .addTo(map);
+            .setPopup(new mapboxgl.Popup().setText(stop.name));
+        tramwayMarkers.push(marker);
     });
 
     // Add click handler for destinations
@@ -365,7 +366,6 @@ function initializeMap() {
             });
     });
 }
-
 function calculateRoute() {
     if (!currentPositionCoordinates || !destinationCoordinates) {
         alert("Please set both current position and destination.");
@@ -727,6 +727,15 @@ function toggleDrivingOptions() {
     const transportMode = document.getElementById("transportMode").value;
     const drivingOptions = document.getElementById("drivingOptions");
     drivingOptions.style.display = transportMode === "driving" ? "block" : "none";
+
+    // Toggle tramway markers
+    if (transportMode === "tramway") {
+        // Show tramway markers
+        tramwayMarkers.forEach(marker => marker.addTo(map));
+    } else {
+        // Hide tramway markers
+        tramwayMarkers.forEach(marker => marker.remove());
+    }
 }
 
 // Add this function to get place name from coordinates
