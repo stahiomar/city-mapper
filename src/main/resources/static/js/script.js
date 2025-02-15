@@ -462,38 +462,220 @@ function setDestinationFromInput() {
 }
 
 function calculateTramwayRoute() {
+    // 1. Find nearest stops to start and destination points
     const nearestInitialStop = findNearestTramwayStop(currentPositionCoordinates);
     const nearestFinalStop = findNearestTramwayStop(destinationCoordinates);
 
-    if (nearestInitialStop && nearestFinalStop) {
-        // First, find the route from your location to the nearest initial stop
-        const routeToInitialStop = {
-            type: "LineString", coordinates: [currentPositionCoordinates, nearestInitialStop.coordinates]
-        };
-
-        // Second, find the tram route from the nearest initial stop to the final stop
-        const tramwayRoute = {
-            type: "LineString", coordinates: [nearestInitialStop.coordinates, nearestFinalStop.coordinates]
-        };
-
-        // Finally, find the route from the final stop to the destination
-        const routeToDestination = {
-            type: "LineString", coordinates: [nearestFinalStop.coordinates, destinationCoordinates]
-        };
-
-        // Combine all parts of the route
-        const combinedRoute = {
-            type: "FeatureCollection",
-            features: [{type: "Feature", geometry: routeToInitialStop}, {
-                type: "Feature",
-                geometry: tramwayRoute
-            }, {type: "Feature", geometry: routeToDestination}]
-        };
-
-        displayRoute(combinedRoute, "N/A", "N/A", 6);
-    } else {
-        alert("No tramway route found.");
+    if (!nearestInitialStop || !nearestFinalStop) {
+        alert("Could not find suitable tramway stops nearby.");
+        return;
     }
+
+    // 2. Get walking routes to/from tram stops
+    Promise.all([
+        // Get walking route from current position to first tram stop
+        fetch(`https://api.mapbox.com/directions/v5/mapbox/walking/${currentPositionCoordinates.join(",")};${nearestInitialStop.coordinates.join(",")}?geometries=geojson&access_token=${mapboxgl.accessToken}`),
+        // Get walking route from last tram stop to destination
+        fetch(`https://api.mapbox.com/directions/v5/mapbox/walking/${nearestFinalStop.coordinates.join(",")};${destinationCoordinates.join(",")}?geometries=geojson&access_token=${mapboxgl.accessToken}`)
+    ])
+        .then(responses => Promise.all(responses.map(r => r.json())))
+        .then(([initialWalkData, finalWalkData]) => {
+            if (!initialWalkData.routes?.[0] || !finalWalkData.routes?.[0]) {
+                throw new Error("Could not calculate walking routes");
+            }
+
+            // 3. Calculate tram route between stops
+            const tramRoute = calculateTramStopsRoute(nearestInitialStop, nearestFinalStop);
+
+            // 4. Combine all routes
+            const combinedRoute = {
+                type: "FeatureCollection",
+                features: [
+                    // Initial walking route
+                    {
+                        type: "Feature",
+                        properties: { type: "walking", description: "Walk to tram stop" },
+                        geometry: initialWalkData.routes[0].geometry
+                    },
+                    // Tram route
+                    {
+                        type: "Feature",
+                        properties: { type: "tram", description: "Tram journey" },
+                        geometry: tramRoute.geometry
+                    },
+                    // Final walking route
+                    {
+                        type: "Feature",
+                        properties: { type: "walking", description: "Walk to destination" },
+                        geometry: finalWalkData.routes[0].geometry
+                    }
+                ]
+            };
+
+            // 5. Calculate total metrics
+            const initialWalkDistance = initialWalkData.routes[0].distance;
+            const finalWalkDistance = finalWalkData.routes[0].distance;
+            const initialWalkDuration = initialWalkData.routes[0].duration;
+            const finalWalkDuration = finalWalkData.routes[0].duration;
+            const tramDuration = tramRoute.duration;
+            const tramDistance = tramRoute.distance;
+
+            const totalDistance = (initialWalkDistance + tramDistance + finalWalkDistance) / 1000; // Convert to km
+            const totalDuration = (initialWalkDuration + tramDuration + finalWalkDuration) / 60; // Convert to minutes
+
+            // 6. Display the route with different colors for walking and tram segments
+            displayMultiModalRoute(combinedRoute, totalDuration.toFixed(1), totalDistance.toFixed(1), 6);
+
+            // 7. Display step-by-step instructions
+            displayTramwayInstructions(
+                nearestInitialStop,
+                nearestFinalStop,
+                initialWalkDistance,
+                finalWalkDistance,
+                initialWalkDuration,
+                finalWalkDuration
+            );
+        })
+        .catch(error => {
+            console.error("Error calculating tramway route:", error);
+            alert("Error calculating tramway route. Please try again.");
+        });
+}
+
+function calculateTramStopsRoute(startStop, endStop) {
+    // Find the sequence of stops between start and end
+    const tramStopsPath = findTramStopsPath(startStop, endStop);
+
+    // Create a LineString geometry connecting all the stops
+    const coordinates = tramStopsPath.map(stop => stop.coordinates.map(Number));
+
+    // Calculate approximate duration (assuming 3 minutes between stops)
+    const duration = (tramStopsPath.length - 1) * 180; // 180 seconds per stop
+    const distance = calculateTotalTramDistance(coordinates);
+
+    return {
+        geometry: {
+            type: "LineString",
+            coordinates: coordinates
+        },
+        duration: duration,
+        distance: distance
+    };
+}
+
+function findTramStopsPath(startStop, endStop) {
+    // Helper function to determine if two stops are on the same line
+    function areOnSameLine(stop1, stop2) {
+        // This is a simplified implementation. You might need to adjust this
+        // based on your actual tram line data structure
+        const stop1Index = tramwayStops.findIndex(s => s.name === stop1.name);
+        const stop2Index = tramwayStops.findIndex(s => s.name === stop2.name);
+        return Math.abs(stop1Index - stop2Index) === Math.abs(stop2Index - stop1Index);
+    }
+
+    // Find all stops between start and end
+    const path = [];
+    let currentStop = startStop;
+    path.push(currentStop);
+
+    while (currentStop.name !== endStop.name) {
+        // Find next stop in the direction of the destination
+        const nextStop = tramwayStops.find(stop =>
+            areOnSameLine(currentStop, stop) &&
+            calculateDistance(stop.coordinates, endStop.coordinates) <
+            calculateDistance(currentStop.coordinates, endStop.coordinates)
+        );
+
+        if (!nextStop) break; // No more stops found
+        path.push(nextStop);
+        currentStop = nextStop;
+    }
+
+    return path;
+}
+
+function displayMultiModalRoute(routeData, estimatedTime, distance, price) {
+    document.getElementById("pricing").innerHTML = `
+        <p>Estimated Time: ${estimatedTime} minutes</p>
+        <p>Total Distance: ${distance} km</p>
+        <p>Tram Ticket Price: ${price} MAD</p>
+    `;
+
+    // Remove existing route layers
+    ['walking-route', 'tram-route'].forEach(layerId => {
+        if (map.getLayer(layerId)) map.removeLayer(layerId);
+        if (map.getSource(layerId)) map.removeSource(layerId);
+    });
+
+    // Add walking segments (blue)
+    const walkingFeatures = routeData.features.filter(f => f.properties.type === "walking");
+    map.addSource('walking-route', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: walkingFeatures
+        }
+    });
+
+    map.addLayer({
+        id: 'walking-route',
+        type: 'line',
+        source: 'walking-route',
+        paint: {
+            'line-color': '#3887be',
+            'line-width': 4,
+            'line-dasharray': [2, 2]
+        }
+    });
+
+    // Add tram segment (red)
+    const tramFeatures = routeData.features.filter(f => f.properties.type === "tram");
+    map.addSource('tram-route', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: tramFeatures
+        }
+    });
+
+    map.addLayer({
+        id: 'tram-route',
+        type: 'line',
+        source: 'tram-route',
+        paint: {
+            'line-color': '#ff4444',
+            'line-width': 4
+        }
+    });
+
+    // Fit map to show entire route
+    const bounds = new mapboxgl.LngLatBounds();
+    routeData.features.forEach(feature => {
+        feature.geometry.coordinates.forEach(coord => {
+            bounds.extend(coord);
+        });
+    });
+    map.fitBounds(bounds, { padding: 50 });
+}
+
+function displayTramwayInstructions(startStop, endStop, initialWalkDistance, finalWalkDistance, initialWalkDuration, finalWalkDuration) {
+    const instructions = `
+        <h3>Route Instructions:</h3>
+        <ul>
+            <li>Walk ${(initialWalkDistance/1000).toFixed(2)} km (${(initialWalkDuration/60).toFixed(1)} min) to ${startStop.name} tram stop</li>
+            <li>Take the tram from ${startStop.name} to ${endStop.name}</li>
+            <li>Walk ${(finalWalkDistance/1000).toFixed(2)} km (${(finalWalkDuration/60).toFixed(1)} min) to your destination</li>
+        </ul>
+    `;
+    document.getElementById("stepInstructions").innerHTML = instructions;
+}
+
+function calculateTotalTramDistance(coordinates) {
+    let total = 0;
+    for (let i = 0; i < coordinates.length - 1; i++) {
+        total += calculateDistance(coordinates[i], coordinates[i + 1]) * 1000; // Convert km to meters
+    }
+    return total;
 }
 
 function displayRoute(routeGeoJson, estimatedTime, distance, price) {
