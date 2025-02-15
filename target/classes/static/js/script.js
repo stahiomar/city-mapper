@@ -319,20 +319,24 @@ function deleteHistoryItem(index) {
 
 
 function initializeMap() {
+    // Initialize map centered on Rabat, Morocco
     map = new mapboxgl.Map({
-        container: 'map_div', style: 'mapbox://styles/mapbox/streets-v11', center: [-6.841, 34.020], // Rabat default center
-        zoom: 13,
+        container: 'map_div',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-6.826874447320948, 34.02416856221844], // Coordinates for Rabat
+        zoom: 12
     });
 
-    navigator.geolocation.getCurrentPosition(position => {
-        currentPositionCoordinates = [position.coords.longitude, position.coords.latitude];
-        map.setCenter(currentPositionCoordinates);
-        new mapboxgl.Marker({color: 'blue'})
-            .setLngLat(currentPositionCoordinates)
-            .setPopup(new mapboxgl.Popup().setText("Your Current Location"))
-            .addTo(map);
-    }, error => console.error("Error getting location:", error));
+    // Set default current position to Rabat center
+    currentPositionCoordinates = [-6.826874447320948, 34.02416856221844];
 
+    // Add marker for current position
+    new mapboxgl.Marker({color: 'blue'})
+        .setLngLat(currentPositionCoordinates)
+        .setPopup(new mapboxgl.Popup().setText("Your Current Location"))
+        .addTo(map);
+
+    // Add tramway stops
     tramwayStops.forEach(stop => {
         new mapboxgl.Marker({color: 'green'})
             .setLngLat(stop.coordinates)
@@ -340,6 +344,7 @@ function initializeMap() {
             .addTo(map);
     });
 
+    // Add click handler for destinations
     map.on('click', function(e) {
         destinationCoordinates = e.lngLat.toArray();
 
@@ -353,7 +358,6 @@ function initializeMap() {
             .setPopup(new mapboxgl.Popup().setText("Destination"))
             .addTo(map);
 
-        // Get place name and save to history
         getPlaceNameFromCoordinates(destinationCoordinates)
             .then(placeName => {
                 saveToHistory(placeName, destinationCoordinates);
@@ -361,7 +365,6 @@ function initializeMap() {
             });
     });
 }
-
 
 function calculateRoute() {
     if (!currentPositionCoordinates || !destinationCoordinates) {
@@ -628,25 +631,7 @@ function displayMultiModalRoute(routeData, estimatedTime, distance, price) {
         }
     });
 
-    // Add tram segment (red)
-    const tramFeatures = routeData.features.filter(f => f.properties.type === "tram");
-    map.addSource('tram-route', {
-        type: 'geojson',
-        data: {
-            type: 'FeatureCollection',
-            features: tramFeatures
-        }
-    });
 
-    map.addLayer({
-        id: 'tram-route',
-        type: 'line',
-        source: 'tram-route',
-        paint: {
-            'line-color': '#ff4444',
-            'line-width': 4
-        }
-    });
 
     // Fit map to show entire route
     const bounds = new mapboxgl.LngLatBounds();
