@@ -8,6 +8,51 @@ const MAX_HISTORY_ITEMS = 10;
 const mapboxGeocoder = `
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
 `;
+
+
+
+
+
+
+let tramwayStops = [
+    // L1
+    { name: "Hay Karima", coordinates: ["-6.794246224945461", "34.05464631714516"] },
+    { name: "Tabriquet", coordinates: ["-6.800993309186225", "34.04766614317356"] },
+    { name: "La Poste", coordinates: ["-6.806649813841445", "34.04550597264528"] },
+    { name: "Mohammed V - Opera", coordinates: ["-6.811097793614758", "34.043560564866304"] },
+    { name: "Diar", coordinates: ["-6.815551369821723", "34.04091184221076"] },
+    { name: "Gare de Salé", coordinates: ["-6.816379696592143", "34.037826890027794"] },
+    // L1 and L2
+    { name: "Bab Lamrissa", coordinates: ["-6.819288387795674", "34.03243655886321"] },
+    { name: "Pont Hassan II", coordinates: ["-6.821624664398336", "34.02546173900698"] },
+    { name: "Place du 16 Novembre", coordinates: ["-6.825320618825434", "34.02473203749335"] },
+    { name: "Tour Hassan", coordinates: ["-6.826795850906636", "34.01950333666214"] },
+    // L1
+    { name: "Place Al Joulane L1", coordinates: ["-6.831501303140653", "34.01829105738103"] },
+    { name: "Mohammed V Gare de Rabat-Ville", coordinates: ["-6.836279441009599", "34.016036978789515"] },
+    { name: "Bab Rouah", coordinates: ["-6.838892619896942", "34.01219904995462"] },
+    { name: "Bibliothèque Nationale", coordinates: ["-6.84288168964933", "34.00932574262255"] },
+    { name: "Ibn Khaldoun", coordinates: ["-6.843039157107899", "34.00471008488984"] },
+    { name: "Nations Unies", coordinates: ["-6.843903727336229", "33.999797426579185"] },
+    { name: "Agdal Avenue de France", coordinates: ["-6.849085754994158", "33.99748484514149"] },
+    { name: "Ibn Sina", coordinates: ["-6.852543483004251", "33.99534319546036"] },
+    { name: "Ibn Rochd", coordinates: ["-6.858133194080482", "33.98915876329694"] },
+    { name: "Cité Universitaire Souissi", coordinates: ["-6.8610418224530125", "33.98620190898654"] },
+    { name: "Madinat Al Irfane", coordinates: ["-6.864295289263639", "33.982998717504664"] },
+
+    // L2
+    { name: "Hopital Moulay Youssef", coordinates: ["-6.859073101423991", "34.01098237789067"] },
+    { name: "Sidi Mohamed Ben Abdellah", coordinates: ["-6.854665316973613", "34.01625811674855"] },
+    { name: "Place de Russie", coordinates: ["-6.850326545468422", "34.01891299637765"] },
+    { name: "Bab El Had", coordinates: ["-6.842757716632256", "34.02097059120332"] },
+    { name: "Medina", coordinates: ["-6.838942261821657", "34.02193861307675"] },
+    { name: "Bab Chellah", coordinates: ["-6.833697174304354", "34.023909554715615"] },
+    { name: "Place Al Joulane L2", coordinates: ["-6.8313618282713024", "34.01909139591549"] },
+    { name: "Arrazi", coordinates: ["-6.812477352570147", "34.0354903439645"] },
+    { name: "Bettana", coordinates: ["-6.806606033681246", "34.03652700808385"] },
+    { name: "Hassan", coordinates: ["-6.799659759188666", "34.035505006097566"] }
+];
+
 // Add this to your existing JavaScript
 let isHistoryCollapsed = true; // Start collapsed
 
@@ -188,49 +233,7 @@ function toggleHistory() {
 }
 
 
-/*
-******l1******
-* hay karima
-* tabriquet
-* la poste
-* mohammed V - Opera
-* diar
-* gare de salé
-** bab lamrissa
-** pont hassan ||
-** place du 16 novembre
-** tour hassan
-** place al joulane
-* mohammed V gare de rabat-ville
-* bab rouah
-* bibliotheque nationale
-* ibn khaldoun
-* nations unies
-* agdal avenue de france
-* ibn sina
-* ibn rochd
-* cité universitaire souissi
-* madinat al irfane
 
-******l2******
-* hopital moulay youssef
-* sidi mohamed ben abdellah 34.01625811674855, -6.854665316973613
-* place de russie
-* bab el had
-* medina
-* bab chellah
-** place al joulane
-** tour hassan
-** place du 16 novembre 34.02473203749335, -6.825320618825434
-** pont hassan ||
-** bab lamrissa
-* arrazi
-* bettana
-* hassan || 34.035505006097566, -6.799659759188666
-
-
-
-*/
 
 // Add this function to handle saving to history
 function saveToHistory(place, coordinates) {
@@ -312,37 +315,7 @@ function deleteHistoryItem(index) {
 
 
 
-let tramwayStops = [
-    // Rabat Line
-    {name: "Hay Karima", coordinates: [-6.798, 34.046]},
-    {name: "Yacoub Al Mansour", coordinates: [-6.857, 34.020]},
-    {name: "Avenue Med V", coordinates: [-6.832, 34.022]},
-    {name: "Cité Universitaire", coordinates: [-6.870, 34.017]},
-    {name: "Place Nations Unies", coordinates: [-6.832, 34.022]},
-    {name: "Gare Rabat Ville", coordinates: [-6.836, 34.020]},
-    {name: "Medina", coordinates: [-6.840, 34.022]},
-    {name: "Hassan", coordinates: [-6.841, 34.025]},
-    {name: "Bab Chellah", coordinates: [-6.846, 34.023]},
-    {name: "Avenue Mohamed V", coordinates: [-6.851, 34.021]},
-    {name: "Rabat Agdal", coordinates: [-6.857, 34.017]},
-    {name: "Gare Agdal", coordinates: [-6.864, 34.015]},
 
-    // Salé Line
-    {name: "Sidi Moussa", coordinates: [-6.801, 34.061]},
-    {name: "Bab Lamrissa", coordinates: [-6.802, 34.057]},
-    {name: "Gare Salé Ville", coordinates: [-6.809, 34.055]},
-    {name: "Marina", coordinates: [-6.816, 34.054]},
-    {name: "Hay Salam", coordinates: [-6.812, 34.050]},
-    {name: "Gare Bouknadel", coordinates: [-6.794, 34.046]},
-    {name: "Al Qods", coordinates: [-6.790, 34.045]},
-    {name: "Avenue Hassan II", coordinates: [-6.786, 34.043]},
-    {name: "Zerktouni", coordinates: [-6.780, 34.040]},
-    {name: "Hay Riyad", coordinates: [-6.774, 34.038]},
-    {name: "Tabriquet", coordinates: [-6.770, 34.035]},
-    {name: "Aviation", coordinates: [-6.765, 34.032]},
-    {name: "Salé Al Jadida", coordinates: [-6.760, 34.029]},
-    {name: "Hassan ||", coordinates: [-6.799659759188666, 34.035505006097566]}
-];
 
 
 function initializeMap() {
